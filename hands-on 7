@@ -1,0 +1,149 @@
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+
+    public static void main(String[] args) {
+        // Datos no agrupados
+        double[] datosNoAgrupados = {10, 20, 30, 40, 50};
+
+        // Crear objeto de datos no agrupados
+        DatosNoAgrupados datosNoAgrupadosObj = new DatosNoAgrupados(datosNoAgrupados);
+
+        // Calcular media, mediana y moda para datos no agrupados
+        System.out.println("Datos no agrupados:");
+        System.out.println("Media: " + datosNoAgrupadosObj.calcularMedia());
+        System.out.println("Mediana: " + datosNoAgrupadosObj.calcularMediana());
+        System.out.println("Moda: " + Arrays.toString(datosNoAgrupadosObj.calcularModa()));
+
+        // Datos agrupados
+        double[] valores = {10, 20, 30, 40, 50};
+        int[] frecuencias = {2, 3, 4, 2, 1};
+
+        // Crear objeto de datos agrupados
+        DatosAgrupados datosAgrupadosObj = new DatosAgrupados(valores, frecuencias);
+
+        // Calcular media, mediana y moda para datos agrupados
+        System.out.println("\nDatos agrupados:");
+        System.out.println("Media: " + datosAgrupadosObj.calcularMedia());
+        System.out.println("Mediana: " + datosAgrupadosObj.calcularMediana());
+        System.out.println("Moda: " + datosAgrupadosObj.calcularModa());
+    }
+}
+
+class DatosNoAgrupados {
+    private double[] datos;
+
+    public DatosNoAgrupados(double[] datos) {
+        this.datos = datos;
+    }
+
+    public double calcularMedia() {
+        double suma = 0;
+        for (double dato : datos) {
+            suma += dato;
+        }
+        return suma / datos.length;
+    }
+
+    public double calcularMediana() {
+        Arrays.sort(datos);
+        int n = datos.length;
+        if (n % 2 == 0) {
+            return (datos[n / 2 - 1] + datos[n / 2]) / 2;
+        } else {
+            return datos[n / 2];
+        }
+    }
+
+    public double[] calcularModa() {
+        Arrays.sort(datos);
+
+        double moda = datos[0];
+        int maxFrecuencia = 1;
+        int frecuenciaActual = 1;
+
+        for (int i = 1; i < datos.length; i++) {
+            if (datos[i] == datos[i - 1]) {
+                frecuenciaActual++;
+            } else {
+                frecuenciaActual = 1;
+            }
+
+            if (frecuenciaActual > maxFrecuencia) {
+                maxFrecuencia = frecuenciaActual;
+                moda = datos[i];
+            }
+        }
+
+        return new double[] { moda };
+    }
+}
+
+class DatosAgrupados {
+    private double[] valores;
+    private int[] frecuencias;
+
+    public DatosAgrupados(double[] valores, int[] frecuencias) {
+        this.valores = valores;
+        this.frecuencias = frecuencias;
+    }
+
+    public double calcularMedia() {
+        double suma = 0;
+        int totalFrecuencias = 0;
+        for (int i = 0; i < valores.length; i++) {
+            suma += valores[i] * frecuencias[i];
+            totalFrecuencias += frecuencias[i];
+        }
+        return suma / totalFrecuencias;
+    }
+
+    public double calcularMediana() {
+        int totalFrecuencias = Arrays.stream(frecuencias).sum();
+        int mitad = totalFrecuencias / 2;
+        double mediana = 0;
+
+        // Buscar el intervalo que contiene la mediana
+        int sumaFrecuencias = 0;
+        int i = 0;
+        while (sumaFrecuencias + frecuencias[i] < mitad) {
+            sumaFrecuencias += frecuencias[i];
+            i++;
+        }
+
+        // Si el total de frecuencias es par, calcular la mediana como el punto medio del intervalo
+        if (totalFrecuencias % 2 == 0) {
+            mediana = valores[i] + ((valores[i + 1] - valores[i]) / (double) frecuencias[i]) * (mitad - sumaFrecuencias) / frecuencias[i];
+        }
+        // Si el total de frecuencias es impar, la mediana es simplemente el límite superior del intervalo
+        else {
+            mediana = valores[i + 1];
+        }
+
+        return mediana;
+    }
+
+    public String calcularModa() {
+        List<Double> modas = new ArrayList<>();
+        int maxFrecuencia = Integer.MIN_VALUE;
+
+        // Encontrar la frecuencia máxima
+        for (int frecuencia : frecuencias) {
+            maxFrecuencia = Math.max(maxFrecuencia, frecuencia);
+        }
+
+        // Encontrar todas las modas
+        for (int i = 0; i < frecuencias.length; i++) {
+            if (frecuencias[i] == maxFrecuencia) {
+                modas.add(valores[i]);
+            }
+        }
+
+        // Devolver las modas como una cadena
+        return modas.toString();
+    }
+}
+
+
