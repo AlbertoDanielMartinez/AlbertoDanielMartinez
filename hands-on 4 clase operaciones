@@ -1,0 +1,26 @@
+// Clase Operaciones
+public class Operaciones {
+    public static double[] solveLinearSystem(double[][] coefficients, double[] constants) {
+        int n = constants.length;
+
+        for (int pivot = 0; pivot < n - 1; pivot++) {
+            for (int row = pivot + 1; row < n; row++) {
+                double factor = coefficients[row][pivot] / coefficients[pivot][pivot];
+                for (int col = pivot; col < n; col++) {
+                    coefficients[row][col] -= factor * coefficients[pivot][col];
+                }
+                constants[row] -= factor * constants[pivot];
+            }
+        }
+
+        double[] solution = new double[n];
+        for (int i = n - 1; i >= 0; i--) {
+            double sum = constants[i];
+            for (int j = i + 1; j < n; j++) {
+                sum -= coefficients[i][j] * solution[j];
+            }
+            solution[i] = sum / coefficients[i][i];
+        }
+        return solution;
+    }
+}
