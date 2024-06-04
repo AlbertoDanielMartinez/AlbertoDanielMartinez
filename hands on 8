@@ -1,0 +1,46 @@
+public class Lluvia {
+    public static void main(String[] args) {
+        int totalDias = 18;
+        int nubladoYlluvia = 7;
+        int noNubladoYlluvia = 3;
+        int nubladoYnoLluvia = 2;
+        int noNubladoYnoLluvia = 6;
+
+        // Probabilidades marginales
+        double pA = 9.0 / totalDias;
+        double pAComplemento = 9.0 / totalDias;
+        double pB = 10.0 / totalDias;
+        double pBComplemento = 8.0 / totalDias;
+
+        System.out.println("Probabilidad marginal de que esté nublado: P(A) = " + pA);
+        System.out.println("Probabilidad marginal de que no esté nublado: P(A') = " + pAComplemento);
+        System.out.println("Probabilidad marginal de que llueva: P(B) = " + pB);
+        System.out.println("Probabilidad marginal de que no llueva: P(B') = " + pBComplemento);
+
+        // Probabilidades conjuntas
+        double pAInterseccionB = (double) nubladoYlluvia / totalDias;
+        double pAComplementoInterseccionBComplemento = (double) noNubladoYnoLluvia / totalDias;
+
+        System.out.println("Probabilidad conjunta de que esté nublado y llueva: P(A∩B) = " + pAInterseccionB);
+        System.out.println("Probabilidad conjunta de que no esté nublado y no llueva: P(A'∩B') = " + pAComplementoInterseccionBComplemento);
+
+        // Probabilidades condicionales
+        double pBDadoA = (double) nubladoYlluvia / (nubladoYlluvia + nubladoYnoLluvia);
+        double pBDadoAComplemento = (double) noNubladoYlluvia / (noNubladoYlluvia + noNubladoYnoLluvia);
+        double pBComplementoDadoA = (double) nubladoYnoLluvia / (nubladoYlluvia + nubladoYnoLluvia);
+        double pBComplementoDadoAComplemento = (double) noNubladoYnoLluvia / (noNubladoYlluvia + noNubladoYnoLluvia);
+        double pADadoB = (double) nubladoYlluvia / (nubladoYlluvia + noNubladoYlluvia);
+        double pADadoBComplemento = (double) nubladoYnoLluvia / (nubladoYnoLluvia + noNubladoYnoLluvia);
+
+        System.out.println("Probabilidad condicional de que llueva dado que esté nublado: P(B|A) = " + pBDadoA);
+        System.out.println("Probabilidad condicional de que llueva dado que no esté nublado: P(B|A') = " + pBDadoAComplemento);
+        System.out.println("Probabilidad condicional de que no llueva dado que esté nublado: P(B'|A) = " + pBComplementoDadoA);
+        System.out.println("Probabilidad condicional de que no llueva dado que no esté nublado: P(B'|A') = " + pBComplementoDadoAComplemento);
+        System.out.println("Probabilidad condicional de que esté nublado dado que llueva: P(A|B) = " + pADadoB);
+        System.out.println("Probabilidad condicional de que esté nublado dado que no llueva: P(A|B') = " + pADadoBComplemento);
+
+        // Teorema de Bayes
+        double pBDadoNubladoBayes = (pADadoB * pB) / ((pADadoB * pB) + (pADadoBComplemento * pBComplemento));
+        System.out.println("Probabilidad de que llueva dado que esté nublado (Teorema de Bayes): P(B|A) = " + pBDadoNubladoBayes);
+    }
+}
